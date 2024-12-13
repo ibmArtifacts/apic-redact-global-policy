@@ -77,3 +77,10 @@ Response:
 `{"ssn":"*******","creditcard":"*******","Name":"Will"}`
 
 
+# References  
+All the steps taken were instructions from the IBM APIC documentation: [Working with Global Policies](https://www.ibm.com/docs/en/api-connect/10.0.8?topic=applications-working-global-policies) and [Customizing the preflow policy](https://www.ibm.com/docs/en/api-connect/10.0.8?topic=policies-customizing-preflow).
+
+
+
+
+
