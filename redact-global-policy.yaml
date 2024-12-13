@@ -1,0 +1,70 @@
+global-policy: 1.0.0
+info:
+  name: redact
+  title: redact
+  version: 1.0.0
+  full-custom: true
+gateways:
+  - datapower-api-gateway
+assembly:
+  execute:
+    - cors:
+        version: 2.0.0
+        title: cors-in-preflow
+    - client-identification:
+        version: 2.0.0
+        title: ci-in-preflow
+    - ratelimit:
+        version: 2.0.0
+        title: assembly-rt-in-preflow
+        source: plan-default
+    - security:
+        version: 2.0.0
+        title: sec-in-preflow
+    - switch:
+        version: 2.1.0
+        title: switch
+        case:
+          - condition: $header("Content-Type")="application/json"
+            execute:
+              - gatewayscript:
+                  version: 2.0.0
+                  title: gatewayscript
+                  source: console.log('****JSON-redact-ran');
+              - parse:
+                  version: 2.2.0
+                  title: parse
+                  parse-settings-reference:
+                    parse-settings:
+                      document_type: json
+                  use-content-type: false
+              - redact:
+                  version: 2.0.0
+                  title: redact
+                  redactions:
+                    - action: redact
+                      path: ssn
+                    - action: redact
+                      path: creditcard
+                  root: message.body
+          - condition: $header("Content-Type")="application/xml"
+            execute:
+              - gatewayscript:
+                  version: 2.0.0
+                  title: gatewayscript
+                  source: console.log('****XML-redact-ran');
+              - parse:
+                  version: 2.2.0
+                  title: parse
+                  parse-settings-reference:
+                    parse-settings:
+                      document_type: xml
+              - redact:
+                  version: 2.0.0
+                  title: redact
+                  redactions:
+                    - action: redact
+                      path: ssn
+                    - action: redact
+                      path: creditcard
+                  root: message.body
