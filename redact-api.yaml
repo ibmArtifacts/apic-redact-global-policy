@@ -1,0 +1,131 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: redact
+  x-ibm-name: redact
+servers:
+  - url: /redact
+x-ibm-configuration:
+  properties:
+    target-url:
+      value: http://example.com/operation-name
+      description: The URL of the target service
+      encoded: false
+  cors:
+    enabled: true
+  gateway: datapower-api-gateway
+  type: rest
+  phase: realized
+  enforced: true
+  testable: true
+  assembly:
+    execute:
+      - switch:
+          version: 2.1.0
+          title: switch
+          case:
+            - condition: $header("Content-Type")="application/json"
+              execute:
+                - gatewayscript:
+                    version: 2.0.0
+                    title: gatewayscript
+                    source: console.log('****JSON-redact-ran');
+                - parse:
+                    version: 2.2.0
+                    title: parse
+                    parse-settings-reference:
+                      parse-settings:
+                        document_type: json
+                    use-content-type: false
+                - redact:
+                    version: 2.0.0
+                    title: redact
+                    redactions:
+                      - action: redact
+                        path: ssn
+                      - action: redact
+                        path: creditcard
+                    root: message.body
+            - condition: $header("Content-Type")="application/xml"
+              execute:
+                - gatewayscript:
+                    version: 2.0.0
+                    title: gatewayscript
+                    source: console.log('****XML-redact-ran');
+                - parse:
+                    version: 2.2.0
+                    title: parse
+                    parse-settings-reference:
+                      parse-settings:
+                        document_type: xml
+                - redact:
+                    version: 2.0.0
+                    title: redact
+                    redactions:
+                      - action: redact
+                        path: ssn
+                      - action: redact
+                        path: creditcard
+                    root: message.body
+  activity-log:
+    enabled: true
+    success-content: activity
+    error-content: payload
+paths:
+  /:
+    get:
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: string
+    put:
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: string
+    post:
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: string
+    delete:
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: string
+    head:
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: string
+    patch:
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: string
+components:
+  securitySchemes:
+    clientID:
+      type: apiKey
+      in: header
+      name: X-IBM-Client-Id
+security:
+  - clientID: []
