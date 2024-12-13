@@ -20,7 +20,7 @@ The logic is to
 Once the logic is set, the assembly logic can be copied over to the global policy file.    
 
 ## Develop the global policy  
-Take the code after assembly.execute from the intermediary redact API and copy it under the assembly.execute section of the global policy.  
+Take the code after `assembly.execute` from the intermediary redact API and copy it under the `assembly.execute` section of the global policy.  
 ![image](https://github.com/user-attachments/assets/97c1ea67-fab0-4c3b-a42c-6b8da74f66f3)  
 
 The final global policy should like the following [redact-global-policy.yaml](https://github.com/ibmArtifacts/apic-redact-global-policy/blob/main/redact-global-policy.yaml) file.  
